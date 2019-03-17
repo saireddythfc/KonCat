@@ -6,7 +6,15 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Build a team</div>
+                <div class="card-header">
+                    
+                    <div class="card-htext">
+                        <p>
+                            <center>Build a team</center>
+                        </p>
+                    </div>
+
+                </div>
 
                 <div class="card-body">
                     <form method="POST" action="/processTeam">

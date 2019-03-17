@@ -98,18 +98,26 @@ class HomeController extends Controller
 
         $team->save();
 
-        return redirect('/showTeams');
+        return redirect('/showTeams2');
     }
 
-    public function showTeams()
+    
+
+    public function showTeams2(Request $r)
     {
+        if($r->session()->has('location'))
+            $location = $r->session()->get('location');
+        else
+            $location = 'Not set';
+
         $user_id = Auth::user()->id;
 
         $teams = User::find($user_id)->team;
 
         foreach ($teams as $team) {
-            $temp = DB::select("SELECT * FROM Users, Registrations WHERE Registrations.team_id = '$team->id' 
+            $temp = DB::select("SELECT Users.id, Registrations.id as r_id, Users.name, Registrations.status FROM Users, Registrations WHERE Registrations.team_id = '$team->id' 
                 AND Registrations.user_id = Users.id");
+            
             $team['registrations'] = $temp;
         }
 
@@ -118,11 +126,14 @@ class HomeController extends Controller
     
         $yourRequestedTeams =  DB::select("SELECT * FROM teams, Registrations WHERE teams.id = Registrations.team_id
             AND Registrations.user_id = '$user_id'");
+
+        //return $yourRequestedTeams;
         
         $data = array('teams' => $teams,
-            'yourRequestedTeams' => $yourRequestedTeams);
+            'yourRequestedTeams' => $yourRequestedTeams,
+            'user_id' => $user_id, 'location'=> $location);
   
-        return view('showTeams')->with($data);
+        return view('showTeams2')->with($data);
     }
 
     public function updateTeam($id)
@@ -160,7 +171,7 @@ class HomeController extends Controller
 
         $team->save();
 
-        return redirect('/showTeams');
+        return redirect('/showTeams2');
     }
 
     public function selectDomain()
@@ -257,7 +268,6 @@ class HomeController extends Controller
     }
 
     public function acceptRequest($data) {
-        
         $res = DB::table('Registrations')->where('id', $data[0])->update(['status' => 'Accepted']);
         return $res;
     }
@@ -267,4 +277,99 @@ class HomeController extends Controller
         $res = DB::table('Registrations')->where('id', $data[0])->update(['status' => 'Rejected']);
         return $res;
     }
+
+
+
+    public function chat($team_id) {
+
+        $teams = DB::select("SELECT * FROM teams WHERE id='$team_id'");
+        foreach ($teams as $team) {
+            $to_id = $team->user_id;
+        }
+        $user_id = Auth::user()->id;
+                
+        $chats = DB::select("SELECT * FROM chats WHERE team_id='$team_id'
+            AND ((from_id='$user_id' AND to_id='$to_id') OR 
+            (to_id='$user_id' AND from_id='$to_id'))");
+        $chatWith = DB::select("SELECT * FROM users WHERE id = '$to_id'");
+        $chatRegarding = DB::select("SELECT * FROM teams WHERE id = '$team_id'");
+        $data = array('to_id' => $to_id,
+            'id' => $user_id,
+            'team_id' => $team_id,
+            'chats' => $chats,
+            'chatWith' => $chatWith,
+            'chatRegarding' => $chatRegarding);
+
+        return view('chat')->with($data);
+    }
+
+    public function chat2($to_id){
+        $user_id = Auth::user()->id;
+        $data = array('id' => $user_id,
+            'to_id' => $to_id);
+        return view('chat')->with($data);
+    }
+
+    public function myChats() {
+        $user_id = Auth::user()->id;
+
+        $chat1 = array();
+
+        //Chats of user's teams
+        $fids = DB::select("SELECT team_id, from_id, to_id FROM chats WHERE team_id IN
+            (SELECT id FROM teams WHERE user_id='$user_id')");
+        
+        foreach ($fids as $fid) {
+            if($fid->from_id == $user_id)
+                continue;
+            $pName = DB::select("SELECT name FROM users WHERE id='$fid->from_id'");
+            $eName = DB::select("SELECT event FROM teams WHERE id='$fid->team_id'");
+            $t = array($eName[0]->event.'('.$pName[0]->name.')'=> $fid);
+            $chat1 += $t;
+            
+        }
+        
+        $chat2 = array();
+        $fids2 = DB::select("SELECT team_id, from_id, to_id FROM chats WHERE 
+            from_id='$user_id' AND team_id NOT IN
+            (SELECT id FROM teams WHERE user_id='$user_id')");
+
+        foreach ($fids2 as $fid) {
+            $pName = DB::select("SELECT name FROM users WHERE id='$fid->to_id'");
+            $eName = DB::select("SELECT event FROM teams WHERE id='$fid->team_id'");
+            $t = array($eName[0]->event.'('.$pName[0]->name.')'=> $fid);
+            $chat2 += $t;
+        }
+        //return $chat1;
+        $data = array('chat1' => $chat1,
+            'chat2' => $chat2);
+        //return $data;
+        return view('myChats')->with($data);
+    }
+
+    public function goToChat(Request $r, $from_id, $team_id, $to_id){
+
+        if($r->session()->has('location'))
+            $location = $r->session()->get('location');
+        else
+            $location = 'Not set';
+
+        $chats = DB::select("SELECT * FROM chats WHERE team_id='$team_id'
+            AND ((from_id='$from_id' AND to_id='$to_id') OR 
+            (to_id='$from_id' AND from_id='$to_id'))");
+
+        $chatWith = DB::select("SELECT * FROM users WHERE id = '$to_id'");
+        $chatRegarding = DB::select("SELECT * FROM teams WHERE id = '$team_id'");
+        ///return $chatRegarding[0]->event;
+        $data = array('to_id' => $to_id,
+            'id' => $from_id,
+            'team_id' => $team_id,
+            'chats' => $chats,
+            'chatWith' => $chatWith,
+            'chatRegarding' => $chatRegarding,
+            'location' => $location);
+
+        return view('chat')->with($data);
+    }
+
 }

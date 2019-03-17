@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+     <script src="/js/socket.io.js"></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +9,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Home') }}</title>
+    <title>KONCAT</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -21,11 +22,11 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 </head>
-<body style ="background-color:white;">
+<body style ="background-color:black;">
     
     <div id="app" style="margin-top: -30px;">
         
-        <nav class="navbar navbar-expand-md navbar navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-md navbar-default navbar-fixed-top navbar-dark bg-dark">
             
                   <a href="/home" style="margin-left:20px">
                   <img src="images/KonCat.png" alt="Logo" width="90" height="80" style="margin-right:10px">
@@ -60,30 +61,23 @@
                                 <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                             </li>
                         @else
-                            <li class="nav-item">
-                                <p>Your location: </p>
-                                <p>(<a href="/home">Change</a>)</p>
-                            </li>
                             
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} 
+                                    {{ Auth::user()->name }}<span class="caret"></span>
                                 </a>
 
-                                <div  class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-                                    
-                                    <a class="dropdown-item" href="/showTeams">Show my teams</a>
+                                <div  class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="padding: 10px;">
+                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="color: #000000; display: block;">
+                      {{ __('Logout') }}
+                </a>                
+                <a class="dropdown-item" href="/showTeams" style="color: #000000; display: block;">Show my teams</a>
+                <a class="dropdown-item" href="/home" style="color: #000000; display: block;">Change Location</a>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-
-                                </div>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                   @csrf
+                </form>
+              </div>
                                 
                             </li>
 

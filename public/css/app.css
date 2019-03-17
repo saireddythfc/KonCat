@@ -159,3 +159,34 @@ a.before:hover:before,a.after:hover:after{
   width:100%;
 }
 
+
+
+.card{
+  background-color:#fff;    
+  font-family: monospace;
+  text-transform: uppercase;
+
+}
+.card-header{
+  background-color: #FEC503;
+  
+  text-align: center;
+
+}
+
+.py-4{
+  background-color: #000;
+}
+.btn-primary{
+  background-color: #FEC503;
+  color:black;
+
+}
+.form-control{
+  border: 1px solid #fec503;
+}
+.card-htext{
+  padding-top: 10px;
+  font-size: 30px;
+}
+

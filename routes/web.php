@@ -31,7 +31,7 @@ Route::get('/teamBuild', 'HomeController@teamBuild');
 
 Route::post('/processTeam', 'HomeController@processTeam');
 
-Route::get('/showTeams', 'HomeController@showTeams');
+Route::get('/showTeams2', 'HomeController@showTeams2');
 
 Route::get('/updateTeam/{id}', 'HomeController@updateTeam');
 
@@ -55,3 +55,12 @@ Route::get('/acceptRequest/{id}', 'HomeController@acceptRequest');
 Route::get('/rejectRequest/{id}', 'HomeController@rejectRequest');
 
 Route::get('/enterYourLocation/', 'HomeController@enterYourLocation');
+
+
+Route::get('/chat/{team_id}', 'HomeController@chat');
+
+Route::get('/chat2/{to_id}', 'HomeController@chat2');
+
+Route::get('/myChats', 'HomeController@myChats');
+
+Route::get('/newRoute/{from_id}/{team_id}/{to_id}', 'HomeController@goToChat');
