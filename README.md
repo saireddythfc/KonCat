@@ -18,7 +18,7 @@ A member of the team will upload the details of the team and wait for responses.
 
 
 ## Contributing :
-- We're are open to enhancements & bug-fixes.
+- We are open to enhancements & bug-fixes.
 
 **Note :**
 
