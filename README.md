@@ -7,14 +7,14 @@ We, at KonCat, connect people in need, build teams and help them compete.
 A member of the team will upload the details of the team and wait for responses. Enthusiastic people/team can connect with the team member and collaborate.
 
 ## Features :
-- 1.Chat with the Team Leader.
-- 2.Look for events in various domains.
-- 3.Customize your events.
+- 1. Chat with the Team Leader.
+- 2. Look for events in various domains.
+- 3. Customize your events.
 
 
 ## Add-ons :
-- 1.Better User Experience.
-- 2.Mobile Application.
+- 1. Better User Experience.
+- 2. Mobile Application.
 
 
 ## Contributing :
